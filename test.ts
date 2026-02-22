@@ -1,10 +1,10 @@
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
-    if (mySprite.isHittingTile(CollisionDirection.Bottom)) {
-        mySprite.vy += -200
+    if (testSprite.isHittingTile(CollisionDirection.Bottom)) {
+        testSprite.vy += -200
     }
 })
-let mySprite: Sprite = null
-mySprite = sprites.create(img`
+let testSprite: Sprite = null
+testSprite = sprites.create(img`
     2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 
     2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 
     2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 
@@ -22,12 +22,12 @@ mySprite = sprites.create(img`
     2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 
     2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 
     `, SpriteKind.Player)
-scene.cameraFollowSprite(mySprite)
+scene.cameraFollowSprite(testSprite)
 tiles.setCurrentTilemap(tilemap`nivel1`)
-mySprite.ay = 350
-controller.moveSprite(mySprite, 100, 0)
+testSprite.ay = 350
+controller.moveSprite(testSprite, 100, 0)
 scene.setBackgroundColor(9)
-physics.addPhysics(mySprite)
+physics.addPhysics(testSprite)
 physics.setSemiSolids([assets.tile`miMosaico8`])
 physics.setLadders([assets.tile`miMosaico9`])
 physics.setWallJumpTiles([sprites.castle.tilePath2])
