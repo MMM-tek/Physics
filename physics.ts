@@ -5,15 +5,44 @@ namespace physics {
     let ladders: Image[] = []
     let wallJumpTiles: Image[] = []
     let iceTiles: Image[] = []
+    let ignore: Image[] = []
+    let right: Image[] = []
+    let left: Image[] = []
 
-    const MAX_STEP_UP = 8
+    let MAX_STEP_UP = 8
     const GRAVITY_NORMAL = 500
     const TERMINAL_VELOCITY = 250
+
+    //% block
+    export function maxPixelsUp(n: number) { MAX_STEP_UP = n }
 
     //% block="set semi-solid tiles to %list"
     //% list.shadow="lists_create_with"
     //% list.defl="tileset_tile_picker"
     export function setSemiSolids(list: Image[]) { semiSolids = list }
+
+    //% block="set ignore tiles to %list"
+    //% list.shadow="lists_create_with"
+    //% list.defl="tileset_tile_picker"
+    export function setIgnore(list: Image[]) { ignore = list }
+
+    //% block="set right tiles to %list"
+    //% list.shadow="lists_create_with"
+    //% list.defl="tileset_tile_picker"
+    export function setRight(list: Image[]) {
+        for (let valor of list) {
+            right.push(valor)
+        }
+    }
+
+    //% block="set left tiles to %list"
+    //% list.shadow="lists_create_with"
+    //% list.defl="tileset_tile_picker"
+    export function setLeft(list: Image[]) {
+        for (let valor of list) {
+            left.push(valor)
+        }
+    }
 
     //% block="set ladder tiles to %list"
     //% list.shadow="lists_create_with"
@@ -134,7 +163,9 @@ namespace physics {
         let t = tiles.getTileAt(col, row)
         if (!t || ladders.indexOf(t) != -1) return false
         if (ignoreSemi && semiSolids.indexOf(t) != -1) return false
-
+        if (ignore.indexOf(t) != -1) return false
+        if (right.indexOf(t) != -1) return false
+        if (left.indexOf(t) != -1) return false
         // DETECCIÓN POR PÍXEL: Obliga al personaje a no atravesar rampas dibujadas
         let px = Math.floor(x % 16); let py = Math.floor(y % 16)
         let hasPixel = t.getPixel(px, py) != 0
@@ -142,4 +173,28 @@ namespace physics {
 
         return hasPixel || isWall
     }
+
+    game.onUpdate(function () {
+        for (let v of right) {
+            for (let valor of tiles.getTilesByType(v)) {
+                for (let sprite of physicsSprites)
+                    if (sprite.tilemapLocation().column < valor.column) {
+                        tiles.setWallAt(valor, true)
+                    } else {
+                        tiles.setWallAt(valor, false)
+                    }
+            }
+        }
+        for (let v of left) {
+            for (let valor of tiles.getTilesByType(v)) {
+                for (let sprite of physicsSprites)
+                    if (sprite.tilemapLocation().column > valor.column) {
+                        tiles.setWallAt(valor, true)
+                    } else {
+                        tiles.setWallAt(valor, false)
+                    }
+            }
+        }
+    })
+
 }
