@@ -1,4 +1,5 @@
 //% color="#268388" icon="\uf110" block="Physics"
+//% groups='["Physics", "Tile Physics"]'
 namespace physics {
     let physicsSprites: Sprite[] = []
     let semiSolids: Image[] = []
@@ -14,21 +15,25 @@ namespace physics {
     const TERMINAL_VELOCITY = 250
 
     //% block
+    //% group="Physics"
     export function maxPixelsUp(n: number) { MAX_STEP_UP = n }
 
     //% block="set semi-solid tiles to %list"
     //% list.shadow="lists_create_with"
     //% list.defl="tileset_tile_picker"
+    //% group="Tile Physics"
     export function setSemiSolids(list: Image[]) { semiSolids = list }
 
     //% block="set ignore tiles to %list"
     //% list.shadow="lists_create_with"
     //% list.defl="tileset_tile_picker"
+    //% group="Tile Physics"
     export function setIgnore(list: Image[]) { ignore = list }
 
     //% block="set right tiles to %list"
     //% list.shadow="lists_create_with"
     //% list.defl="tileset_tile_picker"
+    //% group="Tile Physics"
     export function setRight(list: Image[]) {
         for (let valor of list) {
             right.push(valor)
@@ -38,6 +43,7 @@ namespace physics {
     //% block="set left tiles to %list"
     //% list.shadow="lists_create_with"
     //% list.defl="tileset_tile_picker"
+    //% group="Tile Physics"
     export function setLeft(list: Image[]) {
         for (let valor of list) {
             left.push(valor)
@@ -47,21 +53,25 @@ namespace physics {
     //% block="set ladder tiles to %list"
     //% list.shadow="lists_create_with"
     //% list.defl="tileset_tile_picker"
+    //% group="Tile Physics"
     export function setLadders(list: Image[]) { ladders = list }
 
     //% block="set wall-jump tiles to %list"
     //% list.shadow="lists_create_with"
     //% list.defl="tileset_tile_picker"
+    //% group="Tile Physics"
     export function setWallJumpTiles(list: Image[]) { wallJumpTiles = list }
 
     //% block="set ice tiles to %list"
     //% list.shadow="lists_create_with"
     //% list.defl="tileset_tile_picker"
+    //% group="Tile Physics"
     export function setIce(list: Image[]) { iceTiles = list }
 
     //% block="add physics to %sprite"
     //% sprite.shadow="variables_get"
     //% sprite.defl="mySprite"
+    //% group="Physics"
     export function addPhysics(sprite: Sprite) {
         if (physicsSprites.indexOf(sprite) == -1) physicsSprites.push(sprite)
 
