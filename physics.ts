@@ -1,3 +1,6 @@
+namespace SpriteKind {
+    export const Platform = SpriteKind.create()
+}
 //% color="#268388" icon="\uf110" block="Physics"
 //% groups='["Physics", "Tile Physics"]'
 namespace physics {
@@ -9,14 +12,33 @@ namespace physics {
     let ignore: Image[] = []
     let right: Image[] = []
     let left: Image[] = []
+    let lastTime = 0
 
     let MAX_STEP_UP = 8
-    const GRAVITY_NORMAL = 500
-    const TERMINAL_VELOCITY = 250
+    let GRAVITY_NORMAL = 500
+    let TERMINAL_VELOCITY = 250
+    let JUMP = -185
 
     //% block
     //% group="Physics"
     export function maxPixelsUp(n: number) { MAX_STEP_UP = n }
+
+    //% block="set %sprite as a moving platform vx %number"
+    //% sprite.shadow="variables_get"
+    //% group="Physics"
+    export function setAsPlatform(sprite: Sprite, n: number) {
+        sprite.setKind(SpriteKind.Platform)
+        sprite.vx = n
+    }
+
+    //% block
+    //% group="Physics"
+    export function gravityAy(n: number) { GRAVITY_NORMAL = n }
+
+    //% block
+    //% group="Physics"
+    export function jumpVy(n: number) { MAX_STEP_UP = n }
+
 
     //% block="set semi-solid tiles to %list"
     //% list.shadow="lists_create_with"
@@ -86,10 +108,14 @@ namespace physics {
             } else if (isTileInList(sprite.left - 2, sprite.y, wallJumpTiles)) {
                 sprite.vy = -165; sprite.vx = 140; sprite.x += 3
             } else if (Math.abs(sprite.vy) < 20) {
-                sprite.vy = -185; sprite.y -= 2
+                sprite.vy = JUMP; sprite.y -= 2
             }
         })
     }
+
+    scene.onHitWall(SpriteKind.Platform, function (sprite, location) {
+        sprite.vx = sprite.vx * -1
+    })
 
     game.onUpdate(function () {
         for (let s of physicsSprites) {
@@ -185,6 +211,9 @@ namespace physics {
     }
 
     game.onUpdate(function () {
+        let currentTime = control.millis()
+        let dt = (currentTime - lastTime) / 1000
+        lastTime = currentTime
         for (let v of right) {
             for (let valor of tiles.getTilesByType(v)) {
                 for (let sprite of physicsSprites)
@@ -203,6 +232,34 @@ namespace physics {
                     } else {
                         tiles.setWallAt(valor, false)
                     }
+            }
+        }
+        // --- 5. PLATAFORMAS MÓVILES Y ASCENSORES ---
+        for (let s of physicsSprites) {
+            for (let platform of sprites.allOfKind(SpriteKind.Platform)) {
+
+                // Detectar si el personaje está cayendo o apoyado sobre la plataforma
+                if (s.vy >= 0 &&
+                    s.bottom >= platform.top - 2 && s.bottom <= platform.top + 4 &&
+                    s.right > platform.left && s.left < platform.right) {
+
+                    // 1. CENTRADO HORIZONTAL TOTAL
+                    s.x = platform.x;
+
+                    // 2. PEGADO VERTICAL (Evita que el ascensor lo deje atrás al bajar)
+                    s.bottom = platform.top;
+
+                    // 3. SINCRONIZACIÓN DE VELOCIDAD
+                    // Igualamos la velocidad del personaje a la de la plataforma
+                    // Esto es vital para que los ascensores funcionen suavemente
+                    s.vy = platform.vy;
+                    s.vx = platform.vx;
+
+                    // 4. COMPENSACIÓN ADICIONAL (Para plataformas muy veloces)
+                    if (platform.vy != 0) {
+                        s.y += platform.vy * dt;
+                    }
+                }
             }
         }
     })
