@@ -15,13 +15,13 @@
         "test.ts"
     ],
     "targetVersions": {
-        "target": "4.0.7",
+        "target": "4.0.8",
         "targetId": "arcade"
     },
     "supportedTargets": [
         "arcade"
     ],
     "preferredEditor": "tsprj",
-        "weight": 79,
+    "weight": 79,
     "icon": "https://raw.githubusercontent.com/MMM-tek/Physics/master/icon.png"
 }
