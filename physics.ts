@@ -247,6 +247,7 @@ namespace physics {
                             if (noJumpSprites.indexOf(sprite) != -1) return
                             tiles.setWallAt(valor, true)
                         } else {
+                            if (noJumpSprites.indexOf(sprite) != -1) return
                             tiles.setWallAt(valor, false)
                     }
             }
@@ -255,8 +256,10 @@ namespace physics {
             for (let valor of tiles.getTilesByType(v)) {
                 for (let sprite of physicsSprites)
                     if (sprite.tilemapLocation().column > valor.column) {
+                        if (noJumpSprites.indexOf(sprite) != -1) return
                         tiles.setWallAt(valor, true)
                     } else {
+                        if (noJumpSprites.indexOf(sprite) != -1) return
                         tiles.setWallAt(valor, false)
                     }
             }
