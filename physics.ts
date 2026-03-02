@@ -20,14 +20,6 @@ namespace physics {
     let TERMINAL_VELOCITY = 250
     let JUMP = -185
 
-    //% block="add no jump to %sprite"
-    //% sprite.shadow="variables_get"
-    //% sprite.defl="mySprite"
-    //% group="Physics"
-    export function addNoJumpSprite(sprite: Sprite) {
-        if (noJumpSprites.indexOf(sprite) == -1) noJumpSprites.push(sprite)
-    }
-
     //% block
     //% group="Physics"
     export function gravity() { return GRAVITY_NORMAL }
@@ -118,19 +110,18 @@ namespace physics {
     export function addPhysics(sprite: Sprite) {
         if (physicsSprites.indexOf(sprite) == -1) physicsSprites.push(sprite)
         controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
-            for(let s of physicsSprites){
-            if (noJumpSprites.indexOf(s) != -1) return
+            if (noJumpSprites.indexOf(sprite) == -1){
             // DETECTAR SI ESTÁ EN ESCALERA PARA DESACTIVAR SALTO
-            let onLadder = isTileInList(s.x, s.y, ladders)
+            let onLadder = isTileInList(sprite.x, sprite.y, ladders)
             if (onLadder) return
 
             // LÓGICA DE SALTO DE PARED
-            if (isTileInList(s.right + 2, s.y, wallJumpTiles)) {
-                s.vy = -165; s.vx = -140; s.x -= 3
-            } else if (isTileInList(sprite.left - 2, s.y, wallJumpTiles)) {
-                s.vy = -165; s.vx = 140; s.x += 3
+            if (isTileInList(sprite.right + 2, sprite.y, wallJumpTiles)) {
+                sprite.vy = -165; sprite.vx = -140; sprite.x -= 3
+            } else if (isTileInList(sprite.left - 2, sprite.y, wallJumpTiles)) {
+                sprite.vy = -165; sprite.vx = 140; sprite.x += 3
             } else if (Math.abs(sprite.vy) < 20) {
-                s.vy = JUMP; s.y -= 2
+                sprite.vy = JUMP; sprite.y -= 2
             }
             }
         })
@@ -146,9 +137,8 @@ namespace physics {
             let onIce = isTileInList(s.x, s.bottom + 2, iceTiles)
 
             // --- 1. GESTIÓN DE GRAVEDAD (SIN REBOTE EN ESCALERAS) ---
-
+            if (noJumpSprites.indexOf(s) == -1){
             if (onLadder) {
-                if (noJumpSprites.indexOf(s) != -1) return
                 s.ay = 0; s.vx *= 0.6
                 if (controller.up.isPressed()) s.vy = -85
                 else if (controller.down.isPressed()) s.vy = 85
@@ -158,7 +148,7 @@ namespace physics {
                 if (onIce) s.vx *= 0.98
                 else if (s.vy == 0) s.vx *= 0.75
             }
-
+            }
 
             // --- 2. DETECCIÓN HORIZONTAL Y RAMPAS (MANTIENE COLISIÓN) ---
             if (Math.abs(s.vx) > 0.1 && !onLadder) {
@@ -243,12 +233,10 @@ namespace physics {
         for (let v of right) {
             for (let valor of tiles.getTilesByType(v)) {
                 for (let sprite of physicsSprites)
-                        if (sprite.tilemapLocation().column < valor.column) {
-                            if (noJumpSprites.indexOf(sprite) != -1) return
-                            tiles.setWallAt(valor, true)
-                        } else {
-                            if (noJumpSprites.indexOf(sprite) != -1) return
-                            tiles.setWallAt(valor, false)
+                    if (sprite.tilemapLocation().column < valor.column) {
+                        tiles.setWallAt(valor, true)
+                    } else {
+                        tiles.setWallAt(valor, false)
                     }
             }
         }
@@ -256,10 +244,8 @@ namespace physics {
             for (let valor of tiles.getTilesByType(v)) {
                 for (let sprite of physicsSprites)
                     if (sprite.tilemapLocation().column > valor.column) {
-                        if (noJumpSprites.indexOf(sprite) != -1) return
                         tiles.setWallAt(valor, true)
                     } else {
-                        if (noJumpSprites.indexOf(sprite) != -1) return
                         tiles.setWallAt(valor, false)
                     }
             }
@@ -267,7 +253,7 @@ namespace physics {
         // --- 5. PLATAFORMAS MÓVILES Y ASCENSORES ---
         for (let s of physicsSprites) {
             for (let platform of sprites.allOfKind(SpriteKind.Platform)) {
-                if (noJumpSprites.indexOf(s) != -1) return
+                if (noJumpSprites.indexOf(s) == -1){
                 // Detectar si el personaje está cayendo o apoyado sobre la plataforma
                 if (s.vy >= 0 &&
                     s.bottom >= platform.top - 2 && s.bottom <= platform.top + 4 &&
@@ -289,6 +275,7 @@ namespace physics {
                     if (platform.vy != 0) {
                         s.y += platform.vy * dt;
                     }
+                }
                 }
             }
         }
