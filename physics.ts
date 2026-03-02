@@ -109,17 +109,19 @@ namespace physics {
     export function addPhysics(sprite: Sprite) {
         if (physicsSprites.indexOf(sprite) == -1) physicsSprites.push(sprite)
         controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
+            for(let s of physicsSprites){
             // DETECTAR SI ESTÁ EN ESCALERA PARA DESACTIVAR SALTO
-            let onLadder = isTileInList(sprite.x, sprite.y, ladders)
+            let onLadder = isTileInList(s.x, s.y, ladders)
             if (onLadder) return
 
             // LÓGICA DE SALTO DE PARED
-            if (isTileInList(sprite.right + 2, sprite.y, wallJumpTiles)) {
-                sprite.vy = -165; sprite.vx = -140; sprite.x -= 3
-            } else if (isTileInList(sprite.left - 2, sprite.y, wallJumpTiles)) {
-                sprite.vy = -165; sprite.vx = 140; sprite.x += 3
+            if (isTileInList(s.right + 2, s.y, wallJumpTiles)) {
+                s.vy = -165; s.vx = -140; s.x -= 3
+            } else if (isTileInList(s.left - 2, s.y, wallJumpTiles)) {
+                s.vy = -165; s.vx = 140; s.x += 3
             } else if (Math.abs(sprite.vy) < 20) {
-                sprite.vy = JUMP; sprite.y -= 2
+                s.vy = JUMP; s.y -= 2
+            }
             }
         })
     }
