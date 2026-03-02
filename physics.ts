@@ -118,7 +118,7 @@ namespace physics {
     export function addPhysics(sprite: Sprite) {
         if (physicsSprites.indexOf(sprite) == -1) physicsSprites.push(sprite)
         controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
-            if (noJumpSprites.indexOf(sprite) == -1){
+            if (noJumpSprites.indexOf(sprite) != -1) return
             // DETECTAR SI ESTÁ EN ESCALERA PARA DESACTIVAR SALTO
             let onLadder = isTileInList(sprite.x, sprite.y, ladders)
             if (onLadder) return
@@ -130,7 +130,6 @@ namespace physics {
                 sprite.vy = -165; sprite.vx = 140; sprite.x += 3
             } else if (Math.abs(sprite.vy) < 20) {
                 sprite.vy = JUMP; sprite.y -= 2
-            }
             }
         })
     }
@@ -147,12 +146,11 @@ namespace physics {
             // --- 1. GESTIÓN DE GRAVEDAD (SIN REBOTE EN ESCALERAS) ---
 
             if (onLadder) {
-                if (noJumpSprites.indexOf(s) == -1){
+                if (noJumpSprites.indexOf(s) != -1) return
                 s.ay = 0; s.vx *= 0.6
                 if (controller.up.isPressed()) s.vy = -85
                 else if (controller.down.isPressed()) s.vy = 85
                 else s.vy = 0
-                }
             } else {
                 s.ay = GRAVITY_NORMAL
                 if (onIce) s.vx *= 0.98
@@ -263,7 +261,7 @@ namespace physics {
         // --- 5. PLATAFORMAS MÓVILES Y ASCENSORES ---
         for (let s of physicsSprites) {
             for (let platform of sprites.allOfKind(SpriteKind.Platform)) {
-                if (noJumpSprites.indexOf(s) == -1){
+                if (noJumpSprites.indexOf(s) != -1) return
                 // Detectar si el personaje está cayendo o apoyado sobre la plataforma
                 if (s.vy >= 0 &&
                     s.bottom >= platform.top - 2 && s.bottom <= platform.top + 4 &&
@@ -285,7 +283,6 @@ namespace physics {
                     if (platform.vy != 0) {
                         s.y += platform.vy * dt;
                     }
-                }
                 }
             }
         }
