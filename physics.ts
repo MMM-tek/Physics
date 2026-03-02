@@ -21,6 +21,18 @@ namespace physics {
 
     //% block
     //% group="Physics"
+    export function gravity() { return GRAVITY_NORMAL }
+
+    //% block
+    //% group="Physics"
+    export function stepUp() { return MAX_STEP_UP }
+
+    //% block
+    //% group="Physics"
+    export function jump() { return JUMP }
+
+    //% block
+    //% group="Physics"
     export function maxPixelsUp(n: number) { MAX_STEP_UP = n }
 
     //% block="set %sprite as a moving platform vx %number"
