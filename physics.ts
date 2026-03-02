@@ -20,6 +20,14 @@ namespace physics {
     let TERMINAL_VELOCITY = 250
     let JUMP = -185
 
+    //% block="add physics to %sprite"
+    //% sprite.shadow="variables_get"
+    //% sprite.defl="mySprite"
+    //% group="Physics"
+    export function addNoJumpSprite(sprite: Sprite) {
+        if (noJumpSprites.indexOf(sprite) == -1) noJumpSprites.push(sprite)
+    }
+
     //% block
     //% group="Physics"
     export function gravity() { return GRAVITY_NORMAL }
