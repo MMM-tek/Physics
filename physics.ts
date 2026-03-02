@@ -20,7 +20,7 @@ namespace physics {
     let TERMINAL_VELOCITY = 250
     let JUMP = -185
 
-    //% block="add physics to %sprite"
+    //% block="add no jump to %sprite"
     //% sprite.shadow="variables_get"
     //% sprite.defl="mySprite"
     //% group="Physics"
