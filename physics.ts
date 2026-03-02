@@ -145,18 +145,20 @@ namespace physics {
             let onIce = isTileInList(s.x, s.bottom + 2, iceTiles)
 
             // --- 1. GESTIÓN DE GRAVEDAD (SIN REBOTE EN ESCALERAS) ---
-            if (noJumpSprites.indexOf(s) == -1){
+
             if (onLadder) {
+                if (noJumpSprites.indexOf(s) == -1){
                 s.ay = 0; s.vx *= 0.6
                 if (controller.up.isPressed()) s.vy = -85
                 else if (controller.down.isPressed()) s.vy = 85
                 else s.vy = 0
+                }
             } else {
                 s.ay = GRAVITY_NORMAL
                 if (onIce) s.vx *= 0.98
                 else if (s.vy == 0) s.vx *= 0.75
             }
-            }
+
 
             // --- 2. DETECCIÓN HORIZONTAL Y RAMPAS (MANTIENE COLISIÓN) ---
             if (Math.abs(s.vx) > 0.1 && !onLadder) {
