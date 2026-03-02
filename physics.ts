@@ -243,10 +243,11 @@ namespace physics {
         for (let v of right) {
             for (let valor of tiles.getTilesByType(v)) {
                 for (let sprite of physicsSprites)
-                    if (sprite.tilemapLocation().column < valor.column) {
-                        tiles.setWallAt(valor, true)
-                    } else {
-                        tiles.setWallAt(valor, false)
+                        if (sprite.tilemapLocation().column < valor.column) {
+                            if (noJumpSprites.indexOf(sprite) != -1) return
+                            tiles.setWallAt(valor, true)
+                        } else {
+                            tiles.setWallAt(valor, false)
                     }
             }
         }
