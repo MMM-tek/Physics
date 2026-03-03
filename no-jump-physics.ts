@@ -4,7 +4,7 @@ namespace physics {
     let MAX_STEP_UP = 8
     let GRAVITY_NORMAL = 500
     
-    //% block="add physics to %sprite"
+    //% block="add no jump physics to %sprite"
     //% sprite.shadow="variables_get"
     //% sprite.defl="mySprite"
     //% group="Physics"
