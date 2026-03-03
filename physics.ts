@@ -21,6 +21,14 @@ namespace physics {
 
     //% block
     //% group="Physics"
+    export function ladderList() { return ladders }
+
+    //% block
+    //% group="Physics"
+    export function iceList() { return iceTiles }
+
+    //% block
+    //% group="Physics"
     export function gravity() { return GRAVITY_NORMAL }
 
     //% block
@@ -196,14 +204,14 @@ namespace physics {
         }
     })
 
-    function isTileInList(x: number, y: number, list: Image[]): boolean {
+    export function isTileInList(x: number, y: number, list: Image[]): boolean {
         let col = Math.floor(x / 16); let row = Math.floor(y / 16)
         if (col < 0 || row < 0) return false
         let t = tiles.getTileAt(col, row)
         return t && list.indexOf(t) != -1
     }
 
-    function checkSolid(x: number, y: number, ignoreSemi: boolean): boolean {
+    export function checkSolid(x: number, y: number, ignoreSemi: boolean): boolean {
         let col = Math.floor(x / 16); let row = Math.floor(y / 16)
         // Seguridad de límites sin usar getTilemap (error de consola eliminado)
         if (col < 0 || row < 0 || col >= 2000 || row >= 2000) return false

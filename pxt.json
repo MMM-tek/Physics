@@ -9,13 +9,14 @@
         "main.ts",
         "README.md",
         "assets.json",
-        "physics.ts"
+        "physics.ts",
+        "no-jump-physics.ts"
     ],
     "testFiles": [
         "test.ts"
     ],
     "targetVersions": {
-        "target": "4.0.8",
+        "target": "4.0.10",
         "targetId": "arcade"
     },
     "supportedTargets": [
